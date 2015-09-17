@@ -19,11 +19,10 @@ namespace UnityStandardAssets._2D
 
         private void Update()
         {
-            if (!m_Jump)
-            {
-                // Read the jump input in Update so button presses aren't missed.
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-            }
+            if (!m_Jump) {
+				// Read the jump input in Update so button presses aren't missed.
+				m_Jump = CrossPlatformInputManager.GetButtonDown ("Jump");
+			}
         }
 
 
@@ -31,9 +30,12 @@ namespace UnityStandardAssets._2D
         {
             // Read the inputs.
             bool crouch = Input.GetKey(KeyCode.LeftControl);
-            float h = CrossPlatformInputManager.GetAxis("Horizontal");
+            float x = CrossPlatformInputManager.GetAxis("Horizontal");
+			float y = CrossPlatformInputManager.GetAxis("Vertical");
+			//bool engaged = CrossPlatformInputManager.GetAxis ("Fire1");
             // Pass all parameters to the character control script.
-            m_Character.Move(h, crouch, m_Jump);
+            m_Character.Move(x,y, crouch, m_Jump);
+			m_Character.engage (crouch);
             m_Jump = false;
         }
     }

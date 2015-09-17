@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7f6b675afabe84ba78bde3f54d1f3c9d
-timeCreated: 1442428584
+timeCreated: 1442527486
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -51,23 +51,13 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: gearPrototypeSpritetxt_0
-      rect:
-        serializedVersion: 2
-        x: 2034
-        y: 1873
-        width: 453
-        height: 106
-      alignment: 0
-      pivot: {x: .5, y: .5}
-      border: {x: 0, y: 0, z: 0, w: 0}
     - name: gearPrototypeSpritetxt_1
       rect:
         serializedVersion: 2
-        x: 932
-        y: 1802
-        width: 318
-        height: 290
+        x: 972
+        y: 1821
+        width: 239
+        height: 244
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\EnviroGear.cs" />
      <Compile Include="Assets\scripts\GearGuyCtrl.cs" />
      <Compile Include="Assets\scripts\GearGuyInputs.cs" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
