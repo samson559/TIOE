@@ -11,15 +11,17 @@ namespace UnityStandardAssets._2D
         [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
 		[SerializeField] private GameObject stickyAura;
-		[SerializeField] private WheelCollider wheelCol;
-		[SerializeField] private GameObject mesh;
+		//[SerializeField] private WheelCollider wheelCol;
+		//[SerializeField] private Transform mesh;
 
         private bool m_Grounded;            // Whether or not the player is grounded.
+		private float groundDist;
         private Rigidbody m_Rigidbody;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-
+		private Transform m_GroundCheck;
         private void Awake()
         {
+			groundDist = gameObject.GetComponent<Collider> ().bounds.extents.y;
             // Setting up references.
             m_Rigidbody = GetComponent<Rigidbody>();
 			stickyAura.SetActive (false);
@@ -27,23 +29,32 @@ namespace UnityStandardAssets._2D
 
 		public void FixedUpdate()
 		{
-			float motor = m_MaxSpeed * Input.GetAxis("Horizontal");
-			wheelCol.motorTorque = motor;
-
-			Vector3 pos;
-			Quaternion rot;
-			wheelCol.GetWorldPose(out pos, out rot);
+			m_Grounded = Physics.Raycast(transform.position,Vector3.down,groundDist+.1f);
 			
-			mesh.transform.position = pos;
-			mesh.transform.rotation = rot;
+			// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+			// This can be done using layers instead but Sample Assets will not overwrite your project settings.
+			/*
+
+			*/
+
 		}
 
 
 		public void Move(float xrate,float yrate, bool crouch, bool jump)
         {
-			float torque = m_MaxSpeed * xrate;
-			wheelCol.motorTorque = torque;
-			m_Rigidbody.velocity = wheelCol.attachedRigidbody.velocity;
+			// If the player should jump...
+			if (m_Grounded && jump)
+			{
+				// Add a vertical force to the player.
+				m_Grounded = false;
+				m_Rigidbody.AddForce(new Vector3(0f, m_JumpForce,0));
+			}
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
+			
+			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, 0.0f);
+			
+			m_Rigidbody.AddForce (movement * m_MaxSpeed);
         }
 		public void engage(bool eng)
 		{
