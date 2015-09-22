@@ -14,7 +14,10 @@ namespace UnityStandardAssets._2D
 		//[SerializeField] private WheelCollider wheelCol;
 		//[SerializeField] private Transform mesh;
 
-        private bool m_Grounded;            // Whether or not the player is grounded.
+        private bool m_Grounded;
+		private bool engaged;
+
+            // Whether or not the player is grounded.
 		private float groundDist;
         private Rigidbody m_Rigidbody;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
@@ -43,28 +46,29 @@ namespace UnityStandardAssets._2D
 		public void Move(float xrate,float yrate, bool crouch, bool jump)
         {
 			// If the player should jump...
-			if (m_Grounded && jump)
+			if (m_Grounded && jump&&!engaged)
 			{
 				// Add a vertical force to the player.
 				m_Grounded = false;
 				m_Rigidbody.AddForce(new Vector3(0f, m_JumpForce,0));
 			}
-			float moveHorizontal = Input.GetAxis ("Horizontal");
-			float moveVertical = Input.GetAxis ("Vertical");
-			
-			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, 0.0f);
-			
-			m_Rigidbody.AddForce (movement * m_MaxSpeed);
+			//float moveHorizontal = Input.GetAxis ("Horizontal");
+			//float moveVertical = Input.GetAxis ("Vertical");
+			//transform.Rotate (xrate * Vector3.forward);
+			if (!engaged)
+				m_Rigidbody.AddForce (Vector3.right * xrate * m_MaxSpeed);
+			else
+				transform.Rotate (Vector3.forward * m_MaxSpeed);
         }
 		public void engage(bool eng)
 		{
+			engaged = eng;
 			stickyAura.SetActive (eng);
 			if(eng)
 				transform.tag = "StickyAura";
 			else
 				transform.tag = "Player";
 		}
-
         private void Flip()
         {
             // Switch the way the player is labelled as facing.

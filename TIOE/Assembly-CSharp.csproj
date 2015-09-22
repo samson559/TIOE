@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\EngageableGear.cs" />
      <Compile Include="Assets\EnviroGear.cs" />
      <Compile Include="Assets\scripts\GearGuyCtrl.cs" />
      <Compile Include="Assets\scripts\GearGuyCtrl1.cs" />
