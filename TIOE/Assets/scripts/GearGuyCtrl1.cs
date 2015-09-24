@@ -86,7 +86,7 @@ namespace UnityStandardAssets._2D
             theScale.x *= -1;
             transform.localScale = theScale;
         }
-        void OnCollisionStay(Collision coll)
+        void OnCollisionEnter(Collision coll)
         {
             //if the player is touching a gear and "engaged" parent to the gear and kill velocity
             if (coll.gameObject.tag == "gear" && stickyAura.active == true)
@@ -103,8 +103,12 @@ namespace UnityStandardAssets._2D
         {
             if (coll.gameObject.tag == "gear")
             {
+				float r = coll.gameObject.GetComponent<Collider>().bounds.extents.x;
+				float m = m_Rigidbody.mass;
+				Vector3 v = m_Rigidbody.velocity;
                 transform.SetParent(null);
                 m_Rigidbody.useGravity = true;
+				m_Rigidbody.AddForce(r*m*v*100);
             }
         }
     }
