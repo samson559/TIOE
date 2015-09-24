@@ -16,6 +16,7 @@ namespace UnityStandardAssets._2D
 
         private bool m_Grounded;
 		private bool engaged;
+		private Vector3 lastpos;
 
             // Whether or not the player is grounded.
 		private float groundDist;
@@ -51,11 +52,16 @@ namespace UnityStandardAssets._2D
 				// Add a vertical force to the player.
 				m_Grounded = false;
 				m_Rigidbody.AddForce(new Vector3(0f, m_JumpForce,0));
+
 			}
             //float moveHorizontal = Input.GetAxis ("Horizontal");
             //float moveVertical = Input.GetAxis ("Vertical");
             //transform.Rotate (xrate * Vector3.forward);
-            m_Rigidbody.AddForce(Vector3.right * xrate * m_MaxSpeed);
+			if (transform.parent == null) 
+			{
+				m_Rigidbody.AddForce(Vector3.right * xrate * m_MaxSpeed);
+			}
+            
             /*
 			if (!engaged)
 				m_Rigidbody.AddForce (Vector3.right * xrate * m_MaxSpeed);
@@ -65,15 +71,23 @@ namespace UnityStandardAssets._2D
         }
 		public void engage(bool eng)
 		{
+
 			engaged = eng;
 			stickyAura.SetActive (eng);
 			if(eng)
 				transform.tag = "StickyAura";
 			else
             {
-                transform.tag = "Player";
-                transform.SetParent(null);
-                m_Rigidbody.useGravity = true;
+
+				if (transform.parent!=null&&transform.parent.gameObject.tag == "gear")
+				{
+					Vector3 moveV=(transform.position-transform.parent.position).normalized;
+					//Debug.Log(transform.parent.name);
+					Debug.Log(moveV);
+					transform.Translate(moveV*.1f);
+
+				}
+
             }
         }
         private void Flip()
@@ -86,30 +100,37 @@ namespace UnityStandardAssets._2D
             theScale.x *= -1;
             transform.localScale = theScale;
         }
-        void OnCollisionEnter(Collision coll)
+        void OnCollisionStay(Collision coll)
         {
+			if(coll.gameObject.tag == "gear" && stickyAura.active == true)
+			{
+				lastpos=transform.position;
             //if the player is touching a gear and "engaged" parent to the gear and kill velocity
-            if (coll.gameObject.tag == "gear" && stickyAura.active == true)
+            if (transform.parent==null)
             {
-                //Debug.Log("grip");
+                //Debug.Log(coll.gameObject.name);
                 transform.SetParent(coll.transform);
                 m_Rigidbody.useGravity = false;
+				//m_Rigidbody.isKinematic=true;
                 m_Rigidbody.velocity = Vector3.zero;
                 m_Rigidbody.angularVelocity = Vector3.zero;
             }
+			}
         }
+
         //deparent from gears
         void OnCollisionExit(Collision coll)
         {
-            if (coll.gameObject.tag == "gear")
+            if (coll.gameObject.tag == "gear"&&transform.parent==coll.transform)
             {
-				float r = coll.gameObject.GetComponent<Collider>().bounds.extents.x;
-				float m = m_Rigidbody.mass;
-				Vector3 v = m_Rigidbody.velocity;
-                transform.SetParent(null);
-                m_Rigidbody.useGravity = true;
-				m_Rigidbody.AddForce(r*m*v*100);
+					transform.SetParent(null);
+					m_Rigidbody.useGravity = true;
+					//m_Rigidbody.isKinematic=false;
+					//m_Rigidbody.velocity=Vector3.zero;
+					m_Rigidbody.AddForce((transform.position-lastpos) * 1);
+					Debug.Log((transform.position-lastpos) * 1);
             }
         }
+
     }
 }
