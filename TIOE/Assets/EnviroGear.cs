@@ -28,6 +28,7 @@ public class EnviroGear : MonoBehaviour {
 		}
 
 	}
+    /*
 	void OnCollisionEnter(Collision col)
 	{
 		Debug.Log (col.gameObject.transform.name+","+transform.name);
@@ -46,5 +47,6 @@ public class EnviroGear : MonoBehaviour {
 		}
 		//gearTrans = null;
 	}
+    */
 
 }

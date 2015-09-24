@@ -46,19 +46,22 @@ namespace UnityStandardAssets._2D
 		public void Move(float xrate,float yrate, bool crouch, bool jump)
         {
 			// If the player should jump...
-			if (m_Grounded && jump&&!engaged)
+			if (m_Grounded && jump&&transform.parent==null)
 			{
 				// Add a vertical force to the player.
 				m_Grounded = false;
 				m_Rigidbody.AddForce(new Vector3(0f, m_JumpForce,0));
 			}
-			//float moveHorizontal = Input.GetAxis ("Horizontal");
-			//float moveVertical = Input.GetAxis ("Vertical");
-			//transform.Rotate (xrate * Vector3.forward);
+            //float moveHorizontal = Input.GetAxis ("Horizontal");
+            //float moveVertical = Input.GetAxis ("Vertical");
+            //transform.Rotate (xrate * Vector3.forward);
+            m_Rigidbody.AddForce(Vector3.right * xrate * m_MaxSpeed);
+            /*
 			if (!engaged)
 				m_Rigidbody.AddForce (Vector3.right * xrate * m_MaxSpeed);
 			else
 				transform.Rotate (Vector3.forward * m_MaxSpeed);
+            */
         }
 		public void engage(bool eng)
 		{
@@ -67,8 +70,12 @@ namespace UnityStandardAssets._2D
 			if(eng)
 				transform.tag = "StickyAura";
 			else
-				transform.tag = "Player";
-		}
+            {
+                transform.tag = "Player";
+                transform.SetParent(null);
+                m_Rigidbody.useGravity = true;
+            }
+        }
         private void Flip()
         {
             // Switch the way the player is labelled as facing.
@@ -78,6 +85,27 @@ namespace UnityStandardAssets._2D
             Vector3 theScale = transform.localScale;
             theScale.x *= -1;
             transform.localScale = theScale;
+        }
+        void OnCollisionStay(Collision coll)
+        {
+            //if the player is touching a gear and "engaged" parent to the gear and kill velocity
+            if (coll.gameObject.tag == "gear" && stickyAura.active == true)
+            {
+                //Debug.Log("grip");
+                transform.SetParent(coll.transform);
+                m_Rigidbody.useGravity = false;
+                m_Rigidbody.velocity = Vector3.zero;
+                m_Rigidbody.angularVelocity = Vector3.zero;
+            }
+        }
+        //deparent from gears
+        void OnCollisionExit(Collision coll)
+        {
+            if (coll.gameObject.tag == "gear")
+            {
+                transform.SetParent(null);
+                m_Rigidbody.useGravity = true;
+            }
         }
     }
 }
