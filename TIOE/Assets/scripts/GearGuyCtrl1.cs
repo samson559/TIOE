@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using System.Collections;
 namespace UnityStandardAssets._2D
 {
     public class GearGuyCtrl1 : MonoBehaviour
@@ -23,6 +23,7 @@ namespace UnityStandardAssets._2D
         private Rigidbody m_Rigidbody;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 		private Transform m_GroundCheck;
+		public ArrayList gearChildren = new ArrayList();
         private void Awake()
         {
 			groundDist = gameObject.GetComponent<Collider> ().bounds.extents.y;
