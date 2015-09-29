@@ -29,7 +29,7 @@ namespace UnityStandardAssets._2D
 			groundDist = gameObject.GetComponent<Collider> ().bounds.extents.y;
             // Setting up references.
             m_Rigidbody = GetComponent<Rigidbody>();
-			stickyAura.SetActive (false);
+			stickyAura.transform.localScale = Vector3.zero;
         }
 
 		public void FixedUpdate()
@@ -74,12 +74,18 @@ namespace UnityStandardAssets._2D
 		{
 
 			engaged = eng;
-			stickyAura.SetActive (eng);
-			if(eng)
+			//stickyAura.SetActive (eng);
+
+
+			if (eng) {
 				transform.tag = "StickyAura";
+				stickyAura.transform.localScale = new Vector3(.76f,.76f,.76f);
+			}
 			else
             {
-
+				transform.tag = "Player";
+				stickyAura.transform.localScale = Vector3.zero;
+				/*
 				if (transform.parent!=null&&transform.parent.gameObject.tag == "gear")
 				{
 					Vector3 moveV=(transform.position-transform.parent.position).normalized;
@@ -88,7 +94,7 @@ namespace UnityStandardAssets._2D
 					transform.Translate(moveV*.1f);
 
 				}
-
+				*/
             }
         }
         private void Flip()
@@ -101,36 +107,60 @@ namespace UnityStandardAssets._2D
             theScale.x *= -1;
             transform.localScale = theScale;
         }
-        void OnCollisionStay(Collision coll)
+		void OnTriggerEnter(Collider coll)
+		{
+
+
+			if (stickyAura.activeSelf && coll.gameObject.tag == "gear") {
+				Debug.Log (gameObject.tag+"on enter");
+				m_Rigidbody.velocity = Vector3.zero;
+				transform.parent = coll.gameObject.transform;
+				m_Rigidbody.useGravity = false;
+			}
+		}
+        void OnTriggerStay(Collider coll)
         {
-			if(coll.gameObject.tag == "gear" && stickyAura.active == true)
-			{
-				lastpos=transform.position;
-            //if the player is touching a gear and "engaged" parent to the gear and kill velocity
-            if (transform.parent==null)
-            {
-                //Debug.Log(coll.gameObject.name);
-                transform.SetParent(coll.transform);
-                m_Rigidbody.useGravity = false;
-				//m_Rigidbody.isKinematic=true;
-                m_Rigidbody.velocity = Vector3.zero;
-                m_Rigidbody.angularVelocity = Vector3.zero;
-            }
+			Debug.Log (gameObject.tag+"on stay");
+
+
+			if (coll.gameObject.tag == "gear") {
+				if (stickyAura.activeSelf) {
+
+					/*
+					lastpos = transform.position;
+					//if the player is touching a gear and "engaged" parent to the gear and kill velocity
+					if (transform.parent == null) {
+						//Debug.Log(coll.gameObject.name);
+						transform.SetParent (coll.transform);
+						m_Rigidbody.useGravity = false;
+						//m_Rigidbody.isKinematic=true;
+						m_Rigidbody.velocity = Vector3.zero;
+						m_Rigidbody.angularVelocity = Vector3.zero;
+					}
+					*/
+					transform.SetParent(null);
+					m_Rigidbody.useGravity=true;
+				}
 			}
         }
 
         //deparent from gears
-        void OnCollisionExit(Collision coll)
+
+        void OnTriggerExit(Collider coll)
         {
+
+
             if (coll.gameObject.tag == "gear"&&transform.parent==coll.transform)
             {
+				Debug.Log (coll.gameObject+"on exit");
 					transform.SetParent(null);
 					m_Rigidbody.useGravity = true;
 					//m_Rigidbody.isKinematic=false;
 					//m_Rigidbody.velocity=Vector3.zero;
-					m_Rigidbody.AddForce((transform.position-lastpos) * 1);
-					Debug.Log((transform.position-lastpos) * 1);
+					//m_Rigidbody.AddForce((transform.position-lastpos) * 1);
+
             }
+            
         }
 
     }
