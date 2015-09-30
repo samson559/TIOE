@@ -29,7 +29,7 @@ namespace UnityStandardAssets._2D
         private void FixedUpdate()
         {
             // Read the inputs.
-            bool crouch = Input.GetKey(KeyCode.LeftControl);
+            bool crouch = Input.GetKey(KeyCode.LeftShift);
             float x = CrossPlatformInputManager.GetAxis("Horizontal");
 			float y = CrossPlatformInputManager.GetAxis("Vertical");
 			//bool engaged = CrossPlatformInputManager.GetAxis ("Fire1");

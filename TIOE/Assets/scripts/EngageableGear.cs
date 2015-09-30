@@ -18,7 +18,7 @@ public class EngageableGear : MonoBehaviour {
 		if (col.gameObject.CompareTag ("StickyAura")) {
 			//float rotScalar = col.gameObject.GetComponent<Rigidbody>().angularVelocity.normalized.magnitude;
 			float rotScalar = Input.GetAxis("Horizontal");
-			transform.Rotate ( rotScalar*rotrate*(Vector3.left * -90));
+			transform.Rotate ( rotScalar*rotrate*(Vector3.left * 90));
 		}
 
 	}

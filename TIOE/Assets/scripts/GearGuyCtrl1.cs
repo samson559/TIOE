@@ -11,8 +11,9 @@ namespace UnityStandardAssets._2D
         [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
 		[SerializeField] private GameObject stickyAura;
-		//[SerializeField] private WheelCollider wheelCol;
-		//[SerializeField] private Transform mesh;
+        [SerializeField] private float m_LaunchSpeed = 10f;
+        //[SerializeField] private WheelCollider wheelCol;
+        //[SerializeField] private Transform mesh;
 
         private bool m_Grounded;
 		private bool engaged;
@@ -62,6 +63,10 @@ namespace UnityStandardAssets._2D
 			{
 				m_Rigidbody.AddForce(Vector3.right * xrate * m_MaxSpeed);
 			}
+            else if(jump)
+            {
+                //force the player to launch
+            }
             
             /*
 			if (!engaged)
@@ -79,7 +84,7 @@ namespace UnityStandardAssets._2D
 
 			if (eng) {
 				transform.tag = "StickyAura";
-				stickyAura.transform.localScale = new Vector3(.76f,.76f,.76f);
+				stickyAura.transform.localScale = new Vector3(.761f,.761f,.761f);
 			}
 			else
             {
@@ -114,35 +119,26 @@ namespace UnityStandardAssets._2D
 			if (stickyAura.activeSelf && coll.gameObject.tag == "gear") {
 				Debug.Log (gameObject.tag+"on enter");
 				m_Rigidbody.velocity = Vector3.zero;
-				transform.parent = coll.gameObject.transform;
+                m_Rigidbody.angularVelocity = Vector3.zero;
+                transform.parent = coll.gameObject.transform;
 				m_Rigidbody.useGravity = false;
 			}
 		}
+        
         void OnTriggerStay(Collider coll)
         {
-			Debug.Log (gameObject.tag+"on stay");
+			//Debug.Log (gameObject.tag+"on stay");
 
 
 			if (coll.gameObject.tag == "gear") {
 				if (stickyAura.activeSelf) {
-
-					/*
 					lastpos = transform.position;
 					//if the player is touching a gear and "engaged" parent to the gear and kill velocity
-					if (transform.parent == null) {
-						//Debug.Log(coll.gameObject.name);
-						transform.SetParent (coll.transform);
-						m_Rigidbody.useGravity = false;
-						//m_Rigidbody.isKinematic=true;
-						m_Rigidbody.velocity = Vector3.zero;
-						m_Rigidbody.angularVelocity = Vector3.zero;
-					}
-					*/
-					transform.SetParent(null);
-					m_Rigidbody.useGravity=true;
+					
 				}
 			}
         }
+        
 
         //deparent from gears
 
@@ -155,9 +151,7 @@ namespace UnityStandardAssets._2D
 				Debug.Log (coll.gameObject+"on exit");
 					transform.SetParent(null);
 					m_Rigidbody.useGravity = true;
-					//m_Rigidbody.isKinematic=false;
-					//m_Rigidbody.velocity=Vector3.zero;
-					//m_Rigidbody.AddForce((transform.position-lastpos) * 1);
+					m_Rigidbody.AddForce((transform.position-lastpos) * (1000*m_LaunchSpeed));
 
             }
             
