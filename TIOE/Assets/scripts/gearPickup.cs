@@ -1,6 +1,6 @@
 ﻿//Dylan Noaker's code
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UnityStandardAssets._2D;
 public class gearPickup : MonoBehaviour {
 	bool pickedUp;
@@ -24,7 +24,18 @@ public class gearPickup : MonoBehaviour {
 			transform.localEulerAngles=Vector3.zero;
 			if(!pickedUp)
 			{
+				List<GameObject> gears = col.GetComponent<GearGuyCtrl1>().gearChildren;
 				pickedUp = true;
+				transform.tag = "Player";
+				int cnt = gears.Count;
+				if(cnt==0)
+				{
+					followScript.target = col.gameObject.transform;
+				}
+				else
+				{
+					followScript.target = gears[cnt-1].transform;
+				}
 				followScript.enabled = true;
 				col.gameObject.GetComponent<GearGuyCtrl1>().gearChildren.Add(gameObject);
 			}

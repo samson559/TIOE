@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 namespace UnityStandardAssets._2D
 {
     public class GearGuyCtrl1 : MonoBehaviour
@@ -23,7 +23,8 @@ namespace UnityStandardAssets._2D
         private Rigidbody m_Rigidbody;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 		private Transform m_GroundCheck;
-		public ArrayList gearChildren = new ArrayList();
+
+		public List<GameObject> gearChildren = new List<GameObject>();
         private void Awake()
         {
 			groundDist = gameObject.GetComponent<Collider> ().bounds.extents.y;
@@ -62,7 +63,11 @@ namespace UnityStandardAssets._2D
 			{
 				m_Rigidbody.AddForce(Vector3.right * xrate * m_MaxSpeed);
 			}
-            
+			int i = 1;
+            foreach (GameObject go in gearChildren) {
+				go.transform.Rotate(m_Rigidbody.angularVelocity*i);
+				i*=-1;
+			}
             /*
 			if (!engaged)
 				m_Rigidbody.AddForce (Vector3.right * xrate * m_MaxSpeed);
@@ -112,7 +117,6 @@ namespace UnityStandardAssets._2D
 
 
 			if (stickyAura.activeSelf && coll.gameObject.tag == "gear") {
-				Debug.Log (gameObject.tag+"on enter");
 				m_Rigidbody.velocity = Vector3.zero;
 				transform.parent = coll.gameObject.transform;
 				m_Rigidbody.useGravity = false;
@@ -120,7 +124,6 @@ namespace UnityStandardAssets._2D
 		}
         void OnTriggerStay(Collider coll)
         {
-			Debug.Log (gameObject.tag+"on stay");
 
 
 			if (coll.gameObject.tag == "gear") {
@@ -152,7 +155,6 @@ namespace UnityStandardAssets._2D
 
             if (coll.gameObject.tag == "gear"&&transform.parent==coll.transform)
             {
-				Debug.Log (coll.gameObject+"on exit");
 					transform.SetParent(null);
 					m_Rigidbody.useGravity = true;
 					//m_Rigidbody.isKinematic=false;
