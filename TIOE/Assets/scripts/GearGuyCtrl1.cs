@@ -92,16 +92,6 @@ namespace UnityStandardAssets._2D
             {
 				transform.tag = "Player";
 				stickyAura.transform.localScale = Vector3.zero;
-				/*
-				if (transform.parent!=null&&transform.parent.gameObject.tag == "gear")
-				{
-					Vector3 moveV=(transform.position-transform.parent.position).normalized;
-					//Debug.Log(transform.parent.name);
-					Debug.Log(moveV);
-					transform.Translate(moveV*.1f);
-
-				}
-				*/
             }
         }
         private void Flip()
@@ -150,7 +140,7 @@ namespace UnityStandardAssets._2D
             {
 					transform.SetParent(null);
 					m_Rigidbody.useGravity = true;
-					m_Rigidbody.AddForce((transform.position-lastpos) * (1000*m_LaunchSpeed));
+					m_Rigidbody.AddForce((transform.position-lastpos) * (m_LaunchSpeed));
 
             }
             
