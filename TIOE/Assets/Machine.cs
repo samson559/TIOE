@@ -31,4 +31,7 @@ public class Machine : MonoBehaviour {
 		}
 	
 	}
+	void OnCollisonEnter(Collision col)
+	{
+	}
 }
