@@ -65,7 +65,7 @@ namespace UnityStandardAssets._2D
 				m_Rigidbody.AddForce(Vector3.right * xrate * m_MaxSpeed);
 			}
 
-			int i = 1;
+			int i = -1;
             foreach (GameObject go in gearChildren) {
 				go.transform.Rotate(m_Rigidbody.angularVelocity*i);
 				i*=-1;

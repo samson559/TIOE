@@ -7,7 +7,7 @@ public class Machine : MonoBehaviour {
 	[SerializeField] private GameObject frntgear;
 	[SerializeField] private GameObject GearDrop;
 	[SerializeField] private float rotrate;
-
+	[SerializeField] private float distToMove;
 	[SerializeField] private MeshRenderer gearDropMat;
 	[SerializeField] private bool activated;
 	[SerializeField] private float deviceDuration;
@@ -16,18 +16,20 @@ public class Machine : MonoBehaviour {
 	void Start () {
 		gearDropMat = GearDrop.GetComponent<MeshRenderer> ();
 		tempDevDur = deviceDuration;
+		distToMove = gameObject.GetComponent<Collider> ().bounds.extents.x;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(activated)
+		if(activated&&tempDevDur>0)
 		{
-			topgear.transform.Rotate(rotrate*Vector3.forward);
-			frntgear.transform.Rotate(rotrate*Vector3.forward);
-			GearDrop.transform.Rotate(rotrate*Vector3.forward);
-			tempDevDur-=Time.deltaTime;
+			topgear.transform.Rotate(rotrate*Vector3.back);
+			frntgear.transform.Rotate(rotrate*Vector3.back);
+			GearDrop.transform.Rotate(rotrate*Vector3.back);
+			tempDevDur-=Time.deltaTime*rotrate;
 			if(tempDevDur>0)
 				door.transform.position = door.transform.position - (rotrate*Time.deltaTime*Vector3.up);
+			Debug.Log(tempDevDur);
 		}
 	
 	}
