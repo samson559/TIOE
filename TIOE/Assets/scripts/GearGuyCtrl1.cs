@@ -25,7 +25,7 @@ namespace UnityStandardAssets._2D
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 		private Transform m_GroundCheck;
 
-		public List<GameObject> gearChildren = new List<GameObject>();
+		public Stack<GameObject> gearChildren = new Stack<GameObject>();
         private void Awake()
         {
 			groundDist = gameObject.GetComponent<Collider> ().bounds.extents.y;
@@ -106,8 +106,6 @@ namespace UnityStandardAssets._2D
         }
 		void OnTriggerEnter(Collider coll)
 		{
-
-
 			if (stickyAura.activeSelf && coll.gameObject.tag == "gear") {
 				m_Rigidbody.velocity = Vector3.zero;
                 m_Rigidbody.angularVelocity = Vector3.zero;
@@ -118,13 +116,10 @@ namespace UnityStandardAssets._2D
         
         void OnTriggerStay(Collider coll)
         {
-
-
 			if (coll.gameObject.tag == "gear") {
 				if (stickyAura.activeSelf) {
 					lastpos = transform.position;
 					//if the player is touching a gear and "engaged" parent to the gear and kill velocity
-					
 				}
 			}
         }
@@ -134,17 +129,13 @@ namespace UnityStandardAssets._2D
 
         void OnTriggerExit(Collider coll)
         {
-
-
             if (coll.gameObject.tag == "gear"&&transform.parent==coll.transform)
             {
 					transform.SetParent(null);
 					m_Rigidbody.useGravity = true;
 					m_Rigidbody.AddForce((transform.position-lastpos) * (m_LaunchSpeed));
-
-            }
-            
+					
+            }   
         }
-
     }
 }

@@ -14,7 +14,7 @@ public class gearPickup : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!pickedUp) {
-			transform.Rotate(5*Vector3.right);
+			transform.Rotate(5*Vector3.up);
 		}
 	}
 	void OnTriggerEnter(Collider col)
@@ -24,7 +24,7 @@ public class gearPickup : MonoBehaviour {
 			transform.localEulerAngles=Vector3.zero;
 			if(!pickedUp)
 			{
-				List<GameObject> gears = col.GetComponent<GearGuyCtrl1>().gearChildren;
+				Stack<GameObject> gears = col.GetComponent<GearGuyCtrl1>().gearChildren;
 				pickedUp = true;
 				transform.tag = "Player";
 				int cnt = gears.Count;
@@ -34,10 +34,10 @@ public class gearPickup : MonoBehaviour {
 				}
 				else
 				{
-					followScript.target = gears[cnt-1].transform;
+					followScript.target = gears.Peek().transform;
 				}
 				followScript.enabled = true;
-				col.gameObject.GetComponent<GearGuyCtrl1>().gearChildren.Add(gameObject);
+				col.gameObject.GetComponent<GearGuyCtrl1>().gearChildren.Push(gameObject);
 			}
 		}
 	}
